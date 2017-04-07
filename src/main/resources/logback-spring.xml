@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+
+    <property name="LOG_HOME" value="D:/log" />
+
+    <springProfile name="prd">
+        <!-- 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件 -->
+        <appender name="StackRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <File>${LOG_HOME}/wechat.log</File>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <FileNamePattern>${LOG_HOME}/wechat.%d{yyyy-MM-dd}.log</FileNamePattern>
+                <!-- 最多保存60day日志文件 -->
+                <maxHistory>60</maxHistory>
+            </rollingPolicy>
+            <encoder>
+                <Pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg %n</Pattern>
+            </encoder>
+        </appender>
+    </springProfile>
+
+    <springProfile name="dev">
+        <root level="DEBUG">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+
+    <springProfile name="prd">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="StackRollingFileAppender" />
+        </root>
+    </springProfile>
+
+    <!--<logger name="com.vcredit.restructure.controller" level="DEBUG"/>-->
+
+</configuration>
